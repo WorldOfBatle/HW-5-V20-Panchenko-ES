@@ -110,6 +110,21 @@ void task3()
 
 void task4()
 {
+    std::cout << "Задача 4. Введите a, b, eps (вещественные). Шаг = 0.1\n";
+    double a, b, eps;
+    std::cin >> a >> b >> eps;
+
+    // Проверяем корректность eps > 0
+    if (eps <= 0.0)
+    {
+        std::cout << "Некорректное значение eps!\n";
+        return;
+    }
+
+    // Шапка таблицы
+    std::cout << "----------------------------------------------\n";
+    std::cout << " N  |    x     |     F(x)       | termsUsed\n";
+    std::cout << "----------------------------------------------\n";
 }
 
 int main()
@@ -117,5 +132,6 @@ int main()
     task1();
     task2();
     task3();
+    task4();
     return 0;
 }
