@@ -37,6 +37,16 @@ void task1()
 
 void task2()
 {
+    std::cout << "Задача 2. Введите k (натуральное) и x (вещественное): ";
+    int k = 0;
+    double x = 0.0;
+    std::cin >> k >> x;
+
+    if (k < 0)
+    {
+        std::cout << "Некорректное значение k!\n";
+        return;
+    }
 }
 
 void task3()
@@ -51,5 +61,6 @@ int main()
 {
     // Пока вызовем только task1() для теста
     task1();
+    task2();
     return 0;
 }
