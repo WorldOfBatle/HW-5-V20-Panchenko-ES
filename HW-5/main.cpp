@@ -169,6 +169,50 @@ void task4()
     std::cout << "----------------------------------------------\n";
     std::cout << " N  |    x     |     F(x)       | termsUsed\n";
     std::cout << "----------------------------------------------\n";
+
+    int row = 1;
+    for (double x = a; x <= b + 1e-9; x += 0.1)
+    {
+        double sum = 0.0;
+        int count = 0;
+
+        // Суммируем Tn, пока |Tn| >= eps
+        while (true)
+        {
+            count++;
+            double Tn = getTerm(count, x);
+
+            if (std::fabs(Tn) < eps)
+            {
+                // Достигли нужной точности
+                break;
+            }
+
+            sum += Tn;
+
+            // ограничимся, скажем, 200 итерациями, чтобы не застрять
+            if (count > 200)
+            {
+                break;
+            }
+        }
+
+        // Собственная константа PI
+        const double PI = 3.14159265358979323846;
+
+        // F(x) = -(PI / 2) * sum
+        double Fx = -(PI / 2.0) * sum;
+
+        // Выводим строку таблицы
+        std::cout << row << "  |  "
+            << x << "  |  "
+            << Fx << "  |  "
+            << count << "\n";
+
+        row++;
+    }
+
+    std::cout << "----------------------------------------------\n";
 }
 
 int main()
