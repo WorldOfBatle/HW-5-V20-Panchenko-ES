@@ -74,6 +74,15 @@ void task2()
 
 void task3()
 {
+    std::cout << "Задача 3. Введите точность eps (вещественное, > 0): ";
+    double eps = 0.0;
+    std::cin >> eps;
+
+    if (eps <= 0.0)
+    {
+        std::cout << "Некорректное значение eps!\n";
+        return;
+    }
 }
 
 void task4()
@@ -82,8 +91,8 @@ void task4()
 
 int main()
 {
-    // Пока вызовем только task1() для теста
     task1();
     task2();
+    task3();
     return 0;
 }
