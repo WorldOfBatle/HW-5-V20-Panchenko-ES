@@ -108,6 +108,50 @@ void task3()
     std::cout << "Число учтённых членов = " << count << std::endl;
 }
 
+// Функция для n-го члена: Tn, для задачи №4
+double getTerm(int n, double x)
+{
+    if (n == 1)
+    {
+        // T1 = x
+        return x;
+    }
+    else if (n == 2)
+    {
+        // T2 = x^3 / (2*3)
+        double power = std::pow(x, 3);
+        double denom = 2.0 * 3.0;
+        return power / denom;
+    }
+    else
+    {
+        // n >= 3
+        // 1) Вычисляем x^(2n-1)
+        double power = std::pow(x, 2.0 * n - 1.0);
+
+        // 2) Числитель
+        long long numProd = 1;
+        for (int odd = 3; odd <= 2 * n - 3; odd += 2)
+        {
+            numProd *= odd;
+        }
+
+        // 3) Знаменатель
+        long long denProd = 1;
+
+        for (int evenVal = 2; evenVal <= 2 * (n - 1); evenVal += 2)
+        {
+            denProd *= evenVal;
+        }
+
+        denProd *= (2 * n - 1);
+
+        // Tn = x^(2n-1) * (numProd) / (denProd)
+        double term = power * (double)numProd / (double)denProd;
+        return term;
+    }
+}
+
 void task4()
 {
     std::cout << "Задача 4. Введите a, b, eps (вещественные). Шаг = 0.1\n";
