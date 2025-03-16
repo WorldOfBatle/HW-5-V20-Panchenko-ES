@@ -1,5 +1,5 @@
 #include <iostream>
-#include <cmath> // для std::sin
+#include <cmath>
 
 void task1()
 {
@@ -31,6 +31,8 @@ void task1()
         // Добавляем к сумме
         sum += val;
     }
+
+    std::cout << "Результат S = " << sum << std::endl;
 }
 
 void task2()
