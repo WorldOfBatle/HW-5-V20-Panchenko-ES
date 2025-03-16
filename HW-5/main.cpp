@@ -83,6 +83,29 @@ void task3()
         std::cout << "Некорректное значение eps!\n";
         return;
     }
+
+    double sum = 0.0;
+    int i = 1;
+    int count = 0; // число прибавленных членов
+
+    while (true)
+    {
+        // Вычисляем i-й член: 1 / sqrt(3^i) = 1 / 3^(i/2)
+        double term = 1.0 / std::pow(3.0, i / 2.0);
+
+        if (term < eps)
+        {
+            // Если член меньше eps, считаем, что дальше можно остановиться
+            break;
+        }
+
+        sum += term;
+        count++;
+        i++;
+    }
+
+    std::cout << "Сумма = " << sum << std::endl;
+    std::cout << "Число учтённых членов = " << count << std::endl;
 }
 
 void task4()
