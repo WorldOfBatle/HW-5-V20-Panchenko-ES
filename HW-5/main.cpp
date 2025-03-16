@@ -47,6 +47,29 @@ void task2()
         std::cout << "Некорректное значение k!\n";
         return;
     }
+
+    // Начальное значение произведения P
+    double P = 1.0;
+
+    // Цикл n от 0 до k
+    for (int n = 0; n <= k; n++)
+    {
+        // Вычисляем знак: (-1)^(n-1)
+        double sign = std::pow(-1.0, double(n - 1));
+
+        // x^(2n)
+        double xPow = std::pow(x, 2.0 * n);
+
+        // (n+2)(n+1)
+        double denom = (n + 2.0) * (n + 1.0);
+
+        double bracket = 1.0 + (sign * xPow / denom);
+
+        // Умножаем в общее произведение
+        P *= bracket;
+    }
+
+    std::cout << "Результат P = " << P << std::endl;
 }
 
 void task3()
