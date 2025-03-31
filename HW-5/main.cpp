@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 
+// Используем рекуррентное соотношение: T1 = sin(x), T(i+1) = sin(T(i))
 void task1()
 {
     std::cout << "Задача 1. Введите n (натуральное) и x (вещественное): ";
@@ -11,30 +12,25 @@ void task1()
     if (n <= 0)
     {
         std::cout << "Некорректное значение n!\n";
-        return; // Прекращаем работу, так как n не подходит
+        return;
     }
 
-    double sum = 0.0;
+    // Вычисляем первый член: T1 = sin(x)
+    double term = std::sin(x);
+    double sum = term;
 
-    // Внешний цикл: i от 1 до n
-    for (int i = 1; i <= n; i++)
+    // Вместо вложенного цикла используем рекуррентное соотношение:
+    // Для i от 2 до n: T(i) = sin(T(i-1))
+    for (int i = 2; i <= n; i++)
     {
-        // val будет хранить промежуточный результат
-        double val = x;
-
-        // Внутренний цикл: j от 1 до i
-        for (int j = 1; j <= i; j++)
-        {
-            val = std::sin(val);
-        }
-
-        // Добавляем к сумме
-        sum += val;
+        term = std::sin(term);
+        sum += term;
     }
 
     std::cout << "Результат S = " << sum << std::endl;
 }
 
+// Вместо повторных вызовов std::pow используем рекуррентное обновление переменных.
 void task2()
 {
     std::cout << "Задача 2. Введите k (натуральное) и x (вещественное): ";
@@ -48,30 +44,29 @@ void task2()
         return;
     }
 
-    // Начальное значение произведения P
     double P = 1.0;
+    // Инициализируем переменные для рекуррентного вычисления:
+    double sign = -1.0; // Для n = 0: (-1)^(0-1) = -1
+    double xPow = 1.0;  // x^(0) = 1
 
-    // Цикл n от 0 до k
+    // Обходим n от 0 до k
     for (int n = 0; n <= k; n++)
     {
-        // Вычисляем знак: (-1)^(n-1)
-        double sign = std::pow(-1.0, double(n - 1));
-
-        // x^(2n)
-        double xPow = std::pow(x, 2.0 * n);
-
-        // (n+2)(n+1)
         double denom = (n + 2.0) * (n + 1.0);
-
         double bracket = 1.0 + (sign * xPow / denom);
-
-        // Умножаем в общее произведение
         P *= bracket;
+
+        // Рекуррентное обновление: 
+        // sign: вместо std::pow(-1, n-1) просто переключаем знак
+        sign = -sign;
+        // xPow: переходим от x^(2n) к x^(2(n+1)) домножением на x^2
+        xPow *= (x * x);
     }
 
     std::cout << "Результат P = " << P << std::endl;
 }
 
+// Вместо использования std::pow для каждого члена, используем рекуррентное деление на sqrt(3)
 void task3()
 {
     std::cout << "Задача 3. Введите точность eps (вещественное, > 0): ";
@@ -85,71 +80,21 @@ void task3()
     }
 
     double sum = 0.0;
-    int i = 1;
-    int count = 0; // число прибавленных членов
+    int count = 0;
+    // Рекуррентное вычисление: первый член T1 = 1/√3
+    double term = 1.0 / std::sqrt(3.0);
 
-    while (true)
+    // Продолжаем, пока очередной член не станет меньше eps
+    while (term >= eps)
     {
-        // Вычисляем i-й член: 1 / sqrt(3^i) = 1 / 3^(i/2)
-        double term = 1.0 / std::pow(3.0, i / 2.0);
-
-        if (term < eps)
-        {
-            // Если член меньше eps, считаем, что дальше можно остановиться
-            break;
-        }
-
         sum += term;
         count++;
-        i++;
+        // Следующий член: делим текущий на √3 (так как 3^( (i+1)/2 ) = 3^(i/2) * √3)
+        term /= std::sqrt(3.0);
     }
 
     std::cout << "Сумма = " << sum << std::endl;
     std::cout << "Число учтённых членов = " << count << std::endl;
-}
-
-// Функция для n-го члена: Tn, для задачи №4
-double getTerm(int n, double x)
-{
-    if (n == 1)
-    {
-        // T1 = x
-        return x;
-    }
-    else if (n == 2)
-    {
-        // T2 = x^3 / (2*3)
-        double power = std::pow(x, 3);
-        double denom = 2.0 * 3.0;
-        return power / denom;
-    }
-    else
-    {
-        // n >= 3
-        // 1) Вычисляем x^(2n-1)
-        double power = std::pow(x, 2.0 * n - 1.0);
-
-        // 2) Числитель
-        long long numProd = 1;
-        for (int odd = 3; odd <= 2 * n - 3; odd += 2)
-        {
-            numProd *= odd;
-        }
-
-        // 3) Знаменатель
-        long long denProd = 1;
-
-        for (int evenVal = 2; evenVal <= 2 * (n - 1); evenVal += 2)
-        {
-            denProd *= evenVal;
-        }
-
-        denProd *= (2 * n - 1);
-
-        // Tn = x^(2n-1) * (numProd) / (denProd)
-        double term = power * (double)numProd / (double)denProd;
-        return term;
-    }
 }
 
 void task4()
@@ -158,57 +103,47 @@ void task4()
     double a, b, eps;
     std::cin >> a >> b >> eps;
 
-    // Проверяем корректность eps > 0
     if (eps <= 0.0)
     {
         std::cout << "Некорректное значение eps!\n";
         return;
     }
 
-    // Шапка таблицы
     std::cout << "----------------------------------------------\n";
     std::cout << " N  |    x     |     F(x)       | termsUsed\n";
     std::cout << "----------------------------------------------\n";
 
     int row = 1;
+    // Идем по x от a до b с шагом 0.1 (учитываем погрешность)
     for (double x = a; x <= b + 1e-9; x += 0.1)
     {
         double sum = 0.0;
         int count = 0;
-
-        // Суммируем Tn, пока |Tn| >= eps
+        // Рекуррентное вычисление ряда: T1 = x
+        double T = x;
         while (true)
         {
             count++;
-            double Tn = getTerm(count, x);
-
-            if (std::fabs(Tn) < eps)
+            // Останавливаем, если |T| < eps
+            if (std::fabs(T) < eps)
             {
-                // Достигли нужной точности
                 break;
             }
-
-            sum += Tn;
-
-            // ограничимся, скажем, 200 итерациями, чтобы не застрять
-            if (count > 200)
+            sum += T;
+            // Вычисляем следующий член по рекуррентной формуле:
+            // r = ((2*count - 1)^2 * x^2) / ((2*count) * (2*count + 1))
+            double r = (std::pow(2.0 * count - 1, 2) * x * x) / ((2.0 * count) * (2.0 * count + 1));
+            T *= r;
+            if (count > 200)  // Защита от бесконечного цикла, если ряд сходится очень медленно
             {
                 break;
             }
         }
 
-        // Собственная константа PI
         const double PI = 3.14159265358979323846;
-
-        // F(x) = -(PI / 2) * sum
         double Fx = -(PI / 2.0) * sum;
 
-        // Выводим строку таблицы
-        std::cout << row << "  |  "
-            << x << "  |  "
-            << Fx << "  |  "
-            << count << "\n";
-
+        std::cout << row << "  |  " << x << "  |  " << Fx << "  |  " << count << "\n";
         row++;
     }
 
